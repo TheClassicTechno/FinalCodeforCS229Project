@@ -1,0 +1,45 @@
+# CS229 Quantitative ML Project - Conda Environment
+# =================================================
+# Complete conda environment specification
+#
+# Usage:
+#   conda env create -f environment.yml
+#   conda activate cs229-quantml
+#
+# To update:
+#   conda env update -f environment.yml
+
+name: cs229-quantml
+
+channels:
+  - conda-forge    # Preferred channel for data science packages
+  - defaults       # Fallback channel
+
+dependencies:
+  # Python Runtime
+  - python=3.13
+
+  # Core Data Science Stack
+  - numpy
+  - pandas
+  - scipy
+
+  # Machine Learning
+  - scikit-learn
+
+  # Visualization
+  - matplotlib
+
+  # Data Fetching & Utilities
+  - yfinance
+  - python-dateutil
+
+  # Development Environment (optional - comment out if not needed)
+  - jupyter
+  - notebook
+  - ipykernel
+
+  # Pip-only packages (not available via conda or better via pip)
+  - pip
+  - pip:
+    - py_vollib
