@@ -5,6 +5,7 @@
 By Juli Huang, Jake Cheng, and Rupert Lu  
 Stanford University CS229 - Fall 2025
 
+Poster link: https://docs.google.com/presentation/d/1yqQVlgoIGQJtpYfX-JJkUdi18qTVGc0x1rFVwWsGShk/edit?usp=sharing
 ---
 
 ## Project Overview
