@@ -40,8 +40,9 @@ def load_real_market_data(ticker='AAPL', use_enhanced_features=False):
     
     # Load data
     file_map = {
-        'AAPL': 'frontend/aapl_options.csv',
-        'TSLA': 'frontend/tsla_options.csv',
+        'AAPL': 'frontend/aapl_180d.csv',
+        'SPY': 'frontend/spy_180d.csv',
+        'TSLA': 'frontend/tsla_180d.csv',
         'MU': 'frontend/mu_options.csv'
     }
     
@@ -330,7 +331,7 @@ def main():
         print(f"      {model:>25s}: {metrics['test_accuracy']*100:>5.1f}% acc, {metrics['test_f1_macro']*100:>5.1f}% F1")
     
     print(f"\n[SAVED] Results saved to: {output_file}")
-    print(f"\n[NEXT] Update paper with real market results!")
+
 
 if __name__ == '__main__':
     main()

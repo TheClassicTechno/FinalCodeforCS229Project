@@ -1,6 +1,10 @@
-# aapl_options_dump.py
-# Quick export of Apple options (calls & puts) from Yahoo Finance.
-# Output: aapl_options.csv
+# Fetch and process options data from Yahoo Finance
+# Exports options data with computed Greeks and classification labels
+# Output: CSV file with option contracts and features
+#
+# NOTE: The classification threshold used to label options as mispriced
+# is exploratory and for research purposes only. It should not be used
+# to derive trading signals without extended validation.
 
 import pandas as pd
 import numpy as np
@@ -30,15 +34,31 @@ def get_risk_free_rate():
     except (IndexError, KeyError):
         return 0.05 # Fallback rate if fetch fails
 
-def classify_price(row):
-    """Classifies an option as overpriced, underpriced, or fair."""
+def classify_bs_residual(row, threshold_pct=0.10):
+    """
+    Classify option as over/under/fairly priced RELATIVE TO BLACK-SCHOLES BENCHMARK.
+    
+    This is explicitly a BENCHMARK-RELATIVE classification.
+   
+    
+    Args:
+        row: DataFrame row with 'mkt_price' and 'bs_price' columns
+        threshold_pct: Deviation threshold (default 10%)
+    
+    Returns:
+        Label string based on market price vs BS price
+    """
     mkt_price = row['mkt_price']
     bs_price = row['bs_price']
+    
     if pd.isna(mkt_price) or pd.isna(bs_price) or bs_price <= 0:
         return 'N/A'
-    if mkt_price > bs_price * 1.1:
+    
+    residual_pct = (mkt_price - bs_price) / bs_price
+    
+    if residual_pct > threshold_pct:
         return 'overpriced'
-    if mkt_price < bs_price * 0.9:
+    elif residual_pct < -threshold_pct:
         return 'underpriced'
     return 'fair'
 
@@ -119,7 +139,7 @@ def main(ticker="AAPL", out_csv="aapl_options.csv", max_expiries=None, days=5):
 
                 # Rename and add placeholder columns
                 sub = sub.rename(columns={"market_price": "mkt_price", "lastPrice": "last_trade_price"})
-                sub["label_uf_over"] = sub.apply(classify_price, axis=1)
+                sub["label_uf_over"] = sub.apply(classify_bs_residual, axis=1)
                 sub["residual"] = sub["mkt_price"] - sub["bs_price"]
                 sub["fwd_option_return"] = np.nan
 
